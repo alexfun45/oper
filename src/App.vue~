@@ -35,14 +35,42 @@ import { SidebarMenu } from 'vue-sidebar-menu'
                         title: 'Услуги',
                         icon: 'fa fa-chart-area',
                         href: '/services'
-                    }
-                ]
+                    },
+                    {
+					          title: 'Handbook',
+					          icon: 'fa fa-file',
+					          href: '/handbook',
+					          child: [
+					            {
+					              href: '/handbook/documents',
+					              title: 'Docuemnt Page',
+					              icon: 'fa fa-lock'
+					            },
+					            {
+									  href: '/handbook/counteragents',
+					              title: 'Counteragent Page',
+					              icon: 'fa fa-lock'						            
+					            },
+					            {
+									  href: '/handbook/organizations',
+					              title: 'Organizations Page',
+					              icon: 'fa fa-lock'						            
+					            },
+					            {
+									  href: '/handbook/objects',
+					              title: 'Objects Page',
+					              icon: 'fa fa-lock'						            
+					            }
+					          ]
+					     }
+				  ]
             }
         }
     }
 </script>
 
-<style>
+<style lang="scss">
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600');
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

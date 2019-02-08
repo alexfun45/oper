@@ -1,0 +1,6 @@
+agents(id INTEGER PRIMARY KEY AUTOINCREMENT, name, cid, service, subscription, contact_id, contract_id)
+contacts(id INTEGER PRIMARY KEY AUTOINCREMENT, phone, email, address, name, surname)
+organizations(id INTEGER PRIMARY KEY AUTOINCREMENT, name, inn)
+objects(type, org_id, address, index)
+documents(id INTEGER PRIMARY KEY AUTOINCREMENT, name)
+

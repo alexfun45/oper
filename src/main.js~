@@ -1,13 +1,25 @@
 import Vue from 'vue'
 //import VueSidebarMenu from 'vue-sidebar-menu'
 import VueSidebarMenu from './index'
+import Сounteragent from './components/Сounteragent.vue'
 import '../dist/vue-sidebar-menu.css'
 import App from './App.vue'
+Vue.use(VueSidebarMenu)
 import Router from 'vue-router'
 Vue.use(Router)
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+Vue.use(VueAxios, axios)
+window.axios = require('axios');
+import VueBus from 'vue-bus'
+Vue.use(VueBus)
 const Payments = { template: '<div>Payments Page</div>' }
 const Services = { template: '<div>Services Page</div>' }
-
+const Handbook = { template: '<div>handbook <router-view/></div>' }
+const Documents = { template: '<div>Documents Page</div>' }
+//const Сounteragent = { template: '<div>Сounteragent Page</div>' }
+const Organization = { template: '<div>Organization Page</div>' }
+const Objects = { template: '<div>Objects Page</div>' }
 
 const router = new Router({
   routes: [
@@ -20,12 +32,53 @@ const router = new Router({
       path: '/services',
       name: 'Services',
       component: Services,
-    }]
+    },
+	  {
+      path: '/handbook',
+      name: 'handbook',
+      component: Handbook,
+      children: [
+        {
+          path: '/handbook/documents',
+          name: 'Documents',
+          component: Documents,
+        },
+        {
+          path: '/handbook/counteragents',
+          name: 'Сounteragent',
+          component: Сounteragent,
+        },
+        {
+          path: '/handbook/organizations',
+          name: 'Organization',
+          component: Organization,
+        },
+        {
+          path: '/handbook/objects',
+          name: 'Objects',
+          component: Objects,
+        }
+      ]
+    }    
+    ]
    });
    
 
 new Vue({
   el: '#app',
   router: router,
+  data() {
+  	return {
+  		api: "./src/api.php"
+  			}
+  	},
+  methods:{
+		add_agent(data){
+			this.axios.post(this.api, {'oper':'add_agent', data: data}).then((response) => {
+						alert(response);
+			 				//console.log(response.data)
+				});	  		  
+  		  } 
+  },
   render: h => h(App)
 })
