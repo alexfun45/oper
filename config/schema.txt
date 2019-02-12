@@ -1,6 +1,6 @@
-agents(id INTEGER PRIMARY KEY AUTOINCREMENT, name, cid, service, subscription, contact_id, contract_id)
-contacts(id INTEGER PRIMARY KEY AUTOINCREMENT, phone, email, address, name, surname)
-organizations(id INTEGER PRIMARY KEY AUTOINCREMENT, name, inn)
-objects(type, org_id, address, index)
+agents(id INTEGER PRIMARY KEY AUTOINCREMENT, name DEFAULT "", cid DEFAULT "", service DEFAULT "", subscription, contact_id, contract_id)
+contacts(agentId, phone DEFAULT "", mail DEFAULT "", address DEFAULT "", name DEFAULT "", surname DEFAULT "")
+organizations(id INTEGER PRIMARY KEY AUTOINCREMENT, name DEFAULT "", inn DEFAULT "")
+objects(type, org_id, address DEFAULT "", index)
 documents(id INTEGER PRIMARY KEY AUTOINCREMENT, name)
 

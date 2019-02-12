@@ -4,9 +4,13 @@
 		<h1>Контрагенты</h1>
 		<div>
 			<v-server-table ref='table' url="./src/api.php?oper=get_agents" :columns="columns" :options="options">
-				<span slot="erase" slot-scope="{row}"> 
-            <span class='mini-btn fa fa-edit' v-on:click="edit(row)"></span>
-            <span class='mini-btn fa fa-trash' v-on:click="remove(row)"></span>
+				<span slot="contract" slot-scope="{row}">
+					<a class='iconlink' class="fa fa-file" :href="getContract(row.contract)"></a>				
+				</span>			
+				<span slot="erase" slot-scope="{row}">
+					<span v-on:click='setRow(row)'><file-upload :accept='accesfiles' :btn-label='upload_label' @error='errorUpload' :additional-data='upload_data' :url='urlupload' :headers="headers" @change="onFileChange"></file-upload></span>
+            	<span class='mini-btn fa fa-edit' v-on:click="edit(row)"></span>
+            	<span class='mini-btn fa fa-trash' v-on:click="remove(row)"></span>
         </span>			
 			</v-server-table>
 		</div>
@@ -22,6 +26,8 @@ Vue.use(VueResource)
 Vue.use(ServerTable, {})
 import VModal from 'vue-js-modal'
 Vue.use(VModal, { dynamic: true, dialog: true, injectModalsContainer: true })
+import FileUpload from 'v-file-upload'
+Vue.use(FileUpload)
 
 Vue.component('delete', {
     props: ['data', 'index', 'column'],
@@ -32,6 +38,7 @@ Vue.component('delete', {
         }
     }
 });
+var selectedRows = 0;
 export default {
   		name: 'SidebarMenu',
   		data() {
@@ -39,6 +46,12 @@ export default {
   				agents: [],
   				api: "./src/api.php",
   				time:0,
+  				upload_label: '',
+  				upload_data: {oper: 'fileprepare'},
+  				accesfiles: "*",
+  				urlupload: './src/api.php',
+      		//headers: {'access-token': '<your-token>'},
+      		filesUploaded: [],
   				options:{
   					compileTemplates: true,
 					requestFunction: function (data) {
@@ -52,10 +65,16 @@ export default {
     				name: 'имя',
     				cid: 'номер договора',
     				service: 'услуга',
-    				subscription:'абонентская плата'
+    				subscription:'абонентская плата',
+    				phone: 'телефон',
+    				address: 'адрес',
+    				aname: 'имя',
+    				contract: 'договор',
+    				erase: 'операции'
  					},
   				},
-  				columns: ['id', 'name', 'cid', 'service', 'subscription', 'erase'],
+  				//columns: ['id', 'name', 'cid', 'service', 'subscription', 'erase', 'phone', 'email', 'address', 'aname', 'surname'],
+  				columns: ['id', 'name', 'cid', 'service', 'subscription', 'phone', 'email', 'address', 'aname', 'contract', 'erase'],
 	         tableData: []
   			}
   		},
@@ -78,17 +97,42 @@ export default {
 					  		  
 			})
   		},
-		mounted() {
-			Ccomponent = this;  		
-  		},
   		methods: {
-  		  edit (row) {
-			//alert(row.name);
-			//var _row = row;
-			//var _row = [].slice.call(row);
+  		  setRow(row){
+  		  	  //console.log(row);
+			  //selectedRows.push(row.id);
+			  if(selectedRows==0)
+			  	selectedRows = row.id;
+			  return true;		  
+  		  },
+  		  onFileChange (file) {
+  		  		//console.log(selectedRows);
+  		  		var self = this;
+  		  		file.rowid = selectedRows;
+			   axios.post(this.api, {'oper':'fileupload', data: file}).then((response) => {
+					self.$refs.table.refresh();
+					});	
+			   selectedRows = 0;	  
+  		  },
+  		  errorUpload: function(){
+			console.log('error upload file');  		  
+  		  },
+  		  getContract(contract){
+  		  	if(contract!="" && contract!=null)
+				return "./src/data/"+contract;
+			else
+				return "#";  		  
+  		  },
+  		  edit(row){
+  		  	var self = this;
 			var _row = {}, _id = row['id'], self = this, bindRow = row;
-			_row = Vue.util.extend({}, row);
+			for(var i=0, key = '', col=this.$data.columns[i];i<this.$data.columns.length;col=this.$data.columns[i], i++){
+				 //key = self.$data.options.headings[col];
+				 //if(typeof key!==undefined)
+					_row[col] = (row.hasOwnProperty(col)) ? row[col]:"";
+				}
 			delete _row['id'];
+			delete _row['erase'];
 			this.$modal.show({
 			  template: `
 			    <div class='box'>
@@ -104,7 +148,6 @@ export default {
 			    				<button @click="edit_agent" id="goto-signin-btn">Сохранить</button>
 			    				<button @click="close" id="register-btn">Отмена</button>
 			    			</div></div></div></div>`,
-			    			minHeight: 600,
 			    			data() {
 			    				return {
 									val: _row,
@@ -117,15 +160,14 @@ export default {
 									for(var key in data)
 										bindRow[key] = data[key];
 			    					data['id'] = this.$data.id;
-									axios.post(self.api, {'oper':'edit_agent', data: JSON.stringify(data)});
+									axios.post(self.api, {'oper':'edit_agent', data: data});
 									//bindRow = data;									
 									//self.$refs.table.refresh();
 									this.$emit('close');			    				
 			    				},
 								close: function(){ this.$emit('close'); }				    				
-			    				}
-			    			
-			    		})
+			    				}			    			
+			    		}, {time: 0}, {height: 'auto'})
 			    				
 					  
   		  },
@@ -235,6 +277,9 @@ export default {
   	}
   	
 </script>
+<style>
+	@import '../scss/dialogs.css';
+</style>
 <style lang="scss">
 	h2 {
   margin-bottom: 30px;
@@ -285,105 +330,26 @@ thead tr:nth-child(2) th {
 .VueTables__list-filter {
   width: 120px;
 }
-.btn{
-  background-color: #4CAF50; /* Green */
-  border: none;
-  color: white;
-  padding: 12px 25px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px; 
-  cursor: pointer;
+.file-upload{display: inline-block;}
+.file-upload .input-wrapper {
+	 position: relative;
+    background-color: #fff !important;
+    height: auto !important;
+    display: inline-block;
 }
-.btn >i {font-size: 20px; margin-right: 2px;}
-
-.box {
-    background: #fff none repeat scroll 0 0;
-    border-radius: 2px;
-    box-shadow: 0 0 40px #000;
-    color: #8b8c8d;
-    font-size: 0;
-    height: 550px;
-    overflow: hidden;
-    width: 656px;
-    font-family: Montserrat;
+.file-upload .input-wrapper .file-upload-label {
+	font-size: 1em !important;
+	line-height: 1em !important;
+	color: #000 !important;
+	position: relative !important;
+	padding: 2px !important;
+	width: auto !important;
+	margin-left: 4px;
+	top: 3px;
 }
-.box .partition {
-    height: 100%;
-    width: 100%;
+.file-upload .input-wrapper .file-upload-label .file-upload-icon {
+    font-size: 28px !important;
 }
-.box .partition .partition-title {
-    box-sizing: border-box;
-    font-size: 20px;
-    font-weight: 300;
-    letter-spacing: 1px;
-    padding: 30px;
-    text-align: center;
-    width: 100%;
-}
-.box .partition .partition-form {
-    box-sizing: border-box;
-    padding: 0 20px;
-}
-.box .button-set {
-    margin-bottom: 8px;
-}
-.box button {
-    background: #fff none repeat scroll 0 0;
-    border: 1px solid #dddedf;
-    border-radius: 4px;
-    box-sizing: border-box;
-    color: #8b8c8d;
-    cursor: pointer;
-    font-family: Open Sans,sans-serif;
-    font-size: 10px;
-    font-weight: 400;
-    letter-spacing: 1px;
-    width: 100%;
-    margin-top: 8px;
-    min-width: 140px;
-    outline: medium none;
-    padding: 10px;
-    text-transform: uppercase;
-    transition: all 0.1s ease 0s;
-}
-.box input[type="password"], .box input[type="text"] {
-    -moz-border-bottom-colors: none;
-    -moz-border-left-colors: none;
-    -moz-border-right-colors: none;
-    -moz-border-top-colors: none;
-    border-color: -moz-use-text-color -moz-use-text-color #dddedf;
-    border-image: none;
-    border-style: none none solid;
-    border-width: 0 0 1px;
-    box-sizing: border-box;
-    display: block;
-    font-family: inherit;
-    font-size: 12px;
-    line-height: 2;
-    margin-bottom: 4px;
-    outline: medium none;
-    padding: 4px 8px;
-    transition: all 0.5s ease 0s;
-    width: 100%;
-}
-.mini-btn{cursor: pointer;}
-.box #register-btn, .box #signin-btn, #goto-signin-btn {
-    margin-left: 8px;
-    width: 40%;
-}
-.box .github-btn {
-    border-color: #dba226;
-    color: #dba226;
-}
-.box .large-btn {
-    background: #fff none repeat scroll 0 0;
-    width: 100%;
-}
-.box .large-btn span {
-    font-weight: 600;
-}
-.edit-part > *{display: inline-block !important; margin-left: 4px;}
+.iconlink i{ font-size: 14px; cursor: pointer;}
 
 </style>

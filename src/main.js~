@@ -2,6 +2,8 @@ import Vue from 'vue'
 //import VueSidebarMenu from 'vue-sidebar-menu'
 import VueSidebarMenu from './index'
 import Сounteragent from './components/Сounteragent.vue'
+import Organizations from './components/Organizations.vue'
+import Objects from './components/Objects.vue'
 import '../dist/vue-sidebar-menu.css'
 import App from './App.vue'
 Vue.use(VueSidebarMenu)
@@ -13,6 +15,11 @@ Vue.use(VueAxios, axios)
 window.axios = require('axios');
 import VueBus from 'vue-bus'
 Vue.use(VueBus)
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+library.add(faUserSecret)
+Vue.component('font-awesome-icon', FontAwesomeIcon)
 const Payments = { template: '<div>Payments Page</div>' }
 const Services = { template: '<div>Services Page</div>' }
 const Handbook = { template: '<div>handbook <router-view/></div>' }
@@ -50,8 +57,8 @@ const router = new Router({
         },
         {
           path: '/handbook/organizations',
-          name: 'Organization',
-          component: Organization,
+          name: 'Organizations',
+          component: Organizations,
         },
         {
           path: '/handbook/objects',
@@ -73,12 +80,7 @@ new Vue({
   			}
   	},
   methods:{
-		add_agent(data){
-			this.axios.post(this.api, {'oper':'add_agent', data: data}).then((response) => {
-						alert(response);
-			 				//console.log(response.data)
-				});	  		  
-  		  } 
+		
   },
   render: h => h(App)
 })

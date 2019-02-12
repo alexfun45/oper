@@ -1,0 +1,104 @@
+.btn{
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 12px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px; 
+  cursor: pointer;
+}
+.btn >i {font-size: 20px; margin-right: 2px;}
+
+.box {
+    background: #fff none repeat scroll 0 0;
+    border-radius: 2px;
+    box-shadow: 0 0 40px #000;
+    color: #8b8c8d;
+    font-size: 0;
+    height: 550px;
+    overflow: hidden;
+    width: 656px;
+    font-family: Montserrat;
+}
+.box .partition {
+    height: 100%;
+    width: 100%;
+}
+.box .partition .partition-title {
+    box-sizing: border-box;
+    font-size: 20px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    padding: 30px;
+    text-align: center;
+    width: 100%;
+}
+.box .partition .partition-form {
+    box-sizing: border-box;
+    padding: 0 20px;
+}
+.box .button-set {
+    margin-bottom: 8px;
+}
+.box button {
+    background: #fff none repeat scroll 0 0;
+    border: 1px solid #dddedf;
+    border-radius: 4px;
+    box-sizing: border-box;
+    color: #8b8c8d;
+    cursor: pointer;
+    font-family: Open Sans,sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    width: 100%;
+    margin-top: 8px;
+    min-width: 140px;
+    outline: medium none;
+    padding: 10px;
+    text-transform: uppercase;
+    transition: all 0.1s ease 0s;
+}
+.box input[type="password"], .box input[type="text"] {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: -moz-use-text-color -moz-use-text-color #dddedf;
+    border-image: none;
+    border-style: none none solid;
+    border-width: 0 0 1px;
+    box-sizing: border-box;
+    display: block;
+    font-family: inherit;
+    font-size: 12px;
+    line-height: 2;
+    margin-bottom: 4px;
+    outline: medium none;
+    padding: 4px 8px;
+    transition: all 0.5s ease 0s;
+    width: 100%;
+}
+.mini-btn{cursor: pointer;}
+.box #register-btn, .box #signin-btn, #goto-signin-btn {
+    margin-left: 8px;
+    width: 40%;
+}
+.box .github-btn {
+    border-color: #dba226;
+    color: #dba226;
+}
+.box .large-btn {
+    background: #fff none repeat scroll 0 0;
+    width: 100%;
+}
+.box .large-btn span {
+    font-weight: 600;
+}
+.edit-part{margin-bottom: 10px;}
+.edit-part > select{min-width: 150px;}
+.edit-part > *{display: inline-block !important; margin-left: 4px;}
+.edit-part > input{color: #000;}
+.edit-part > span{width: 100px; font-size: 12px; text-align: right;}

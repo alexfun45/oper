@@ -1,5 +1,8 @@
 <?php
 	//ini_set('display_errors', TRUE);
+	header('Access-Control-Allow-Origin: *');
+	header('Access-Control-Allow-Methods: POST, GET, PUT, DELETE, OPTIONS');
+	header('Access-Control-Allow-Headers: X-Requested-With, content-type');
 	include_once '../config/config.php';
 	include_once 'libs/DbConnection.php';
 	include_once 'libs/Installer.php';
